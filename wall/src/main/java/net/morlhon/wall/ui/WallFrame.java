@@ -1,0 +1,244 @@
+package net.morlhon.wall.ui;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+import java.awt.Shape;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JFrame;
+
+import net.morlhon.wall.net.WallHttpServer;
+import net.morlhon.wall.ui.ushering.Usherette;
+
+public class WallFrame extends JFrame {
+   private static final String NO_DATA_YET = "No data yet...";
+   private static final String FRAME_TITLE = "Wall";
+   private static final String DEBUG = "DEBUG";
+   private static final Dimension DEFAULT_SIZE = new Dimension(640, 480);
+   private static final int TOPMARGIN = 5;
+   private static final int BOTTOMMARGIN = 5;
+   private List<Brick> brickList = new ArrayList<Brick>();
+   private final Usherette usherette;
+   private final ImageCache cache;
+   private BufferedImage buffer;
+   private WallHttpServer server;
+
+   public WallFrame(URL facesURL, Usherette usherette) {
+      super(FRAME_TITLE);
+      this.cache = new ImageCache(facesURL);
+      this.usherette = usherette;
+      setupFrame(System.getProperty(DEBUG) == null);
+   }
+
+   public void setWallServer(WallHttpServer server) {
+      this.server = server;
+      server.start();
+   }
+
+   public void close() {
+      setVisible(false);
+      dispose();
+   }
+
+   private void setupFrame(boolean fullScreen) {
+      setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+      cache.init();
+      if (fullScreen) {
+         this.setUndecorated(true);
+         GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
+      } else {
+         this.setSize(DEFAULT_SIZE);
+      }
+      this.setVisible(true);
+
+      addWindowListener(new WindowAdapter() {
+
+         @Override
+         public void windowClosed(WindowEvent e) {
+            if (server != null) {
+               server.stop();
+            }
+         }
+
+      });
+
+      getContentPane().addComponentListener(new ComponentAdapter() {
+         @Override
+         public void componentResized(ComponentEvent e) {
+            buffer = null;
+            setBrickList(WallFrame.this.brickList);
+         }
+      });
+
+      addKeyListener(new KeyAdapter() {
+         @Override
+         public void keyReleased(KeyEvent e) {
+            close();
+         }
+      });
+
+      addMouseListener(new MouseAdapter() {
+         @Override
+         public void mouseClicked(MouseEvent me) {
+            if (me.getClickCount() == 2) {
+               close();
+            }
+         }
+      });
+   }
+
+   public void setBrickList(List<Brick> brickList) {
+      synchronized (this.brickList) {
+         this.brickList = brickList;
+         usherette.usher(brickList, getWidth(), getHeight());
+      }
+      drawBuffer();
+      this.repaint();
+   }
+
+   @Override
+   public void paint(Graphics g) {
+      if (buffer == null) {
+         drawBuffer();
+      }
+      g.drawImage(buffer, 0, 0, null);
+   }
+
+   private void drawBuffer() {
+      if (buffer == null) {
+         buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+      }
+      Graphics g = buffer.getGraphics();
+      drawBackground(g, this.brickList.size() == 0);
+      for (Brick brick : this.brickList) {
+         drawBrick(g, brick);
+         int size = drawBrickName(g, brick);
+         size = drawBrickComment(g, brick, size);
+         if (!drawBrickAuthorsAsImage(g, brick, size)) {
+            drawBrickAuthorsAsText(g, brick);
+         }
+      }
+      g.dispose();
+   }
+
+   private void drawBackground(Graphics g, boolean empty) {
+      g.setColor(Color.BLACK);
+      g.fillRect(0, 0, getWidth(), getHeight());
+      if (empty) {
+         writeBackgroundText(g);
+      }
+   }
+
+   private void writeBackgroundText(Graphics g) {
+      g.setFont(g.getFont().deriveFont(Font.BOLD, 48f));
+      Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(NO_DATA_YET, null);
+      double textHeight = stringBounds.getHeight();
+      int sx = (int) ((getWidth() - stringBounds.getWidth()) / 2);
+      int sy = (int) ((getHeight() - textHeight) / 2 + textHeight);
+      g.setColor(Color.WHITE);
+      g.drawString(NO_DATA_YET, sx, sy);
+   }
+
+   private void drawBrick(Graphics g, Brick brick) {
+      g.setColor(brick.getColor());
+      g.fillRect(brick.x, brick.y, brick.width, brick.height);
+      g.setColor(Color.BLACK);
+      g.drawRect(brick.x, brick.y, brick.width, brick.height);
+   }
+
+   private int drawBrickName(Graphics g, Brick brick) {
+      if (brick.getName() == null) {
+         return 0;
+      }
+      g.setFont(g.getFont().deriveFont(Font.BOLD, 52f));
+      Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(brick.getName(), null);
+      int sx = (int) ((brick.width - stringBounds.getWidth()) / 2);
+      double textHeight = stringBounds.getHeight();
+      int sy = (int) Math.round(textHeight) + TOPMARGIN;
+      g.setColor(textColor(brick.getColor()));
+      Shape savedClip = g.getClip();
+      g.setClip(brick.x, brick.y, brick.width, brick.height);
+      g.drawString(brick.getName(), brick.x + sx, brick.y + sy);
+      g.setClip(savedClip);
+      return (int) Math.round(textHeight);
+   }
+
+   private int drawBrickComment(Graphics g, Brick brick, int size) {
+      if (brick.getComment() == null) {
+         return size;
+      }
+      g.setFont(g.getFont().deriveFont(Font.BOLD, 24f));
+      Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(brick.getComment(), null);
+      int sx = (int) ((brick.width - stringBounds.getWidth()) / 2);
+      double textHeight = stringBounds.getHeight();
+      int sy = (int) (size + textHeight + TOPMARGIN);
+      g.setColor(textColor(brick.getColor()));
+      Shape savedClip = g.getClip();
+      g.setClip(brick.x, brick.y, brick.width, brick.height);
+      g.drawString(brick.getComment(), brick.x + sx, brick.y + sy);
+      g.setClip(savedClip);
+      return sy;
+   }
+
+   private boolean drawBrickAuthorsAsImage(Graphics g, Brick brick, int size) {
+      BufferedImage image = cache.getImage(brick.getFooter());
+      if (image == null) {
+         return false;
+      }
+      float maxHeight = brick.height - size - 2 * BOTTOMMARGIN;//(float) brick.height / 2;
+      float scaleFactory = (float) maxHeight / (float) image.getHeight();
+      float newWidth = (float) image.getWidth() * scaleFactory;
+      int sx = (int) (brick.width - newWidth) / 2 + brick.x;
+      int sy = brick.y + size + BOTTOMMARGIN;//(int) (brick.height / 2) + brick.y - BOTTOMMARGIN;
+      g.drawImage(image, sx, sy, Math.round(newWidth), Math.round(maxHeight), null);
+      g.setColor(Color.BLACK);
+      g.drawRect(sx, sy, Math.round(newWidth), Math.round(maxHeight));
+      return true;
+   }
+
+   private void drawBrickAuthorsAsText(Graphics g, Brick brick) {
+      if (brick.getFooter() == null) {
+         return;
+      }
+      g.setFont(g.getFont().deriveFont(Font.BOLD, 24f));
+      Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(brick.getFooter(), null);
+      int sx = (int) ((brick.width - stringBounds.getWidth()) / 2);
+      double textHeight = stringBounds.getHeight();
+      int sy = (int) (((brick.height - textHeight) * 3) / 4 + textHeight);
+      g.setColor(textColor(brick.getColor()));
+      Shape savedClip = g.getClip();
+      g.setClip(brick.x, brick.y, brick.width, brick.height);
+      g.drawString(brick.getFooter(), brick.x + sx, brick.y + sy);
+      g.setClip(savedClip);
+   }
+
+   private Color textColor(Color color) {
+      int sum = (color.getRed() + color.getBlue() + color.getGreen()) / 3;
+      if (sum > 128) {
+         return Color.BLACK;
+      }
+      return Color.WHITE;
+   }
+
+   public void reload() {
+      cache.init();
+      drawBuffer();
+      this.repaint();
+   }
+
+}

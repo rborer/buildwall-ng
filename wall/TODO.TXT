@@ -1,0 +1,7 @@
+Handle Save/Restore of state
+Add fixed project order (placing)
+Handle authors somehow (banner)
+Blink on build running
+Fade to green/red/black when changing color
+When build failed zoom in, during a few seconds and then come back to place.
+Limit build square.
