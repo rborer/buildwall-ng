@@ -1,4 +1,4 @@
-package net.morlhon.wall;
+package net.morlhon.wall.demo;
 
 import net.morlhon.wall.net.WallHttpServer;
 
