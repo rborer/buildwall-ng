@@ -1,4 +1,4 @@
 arthur=arthur.jpg
-barnabe=arthur.jpg
-charles=arthur.jpg
-dorothe=arthur.jpg
+barnabe=Barnabe.jpg
+charles=Charles.jpg
+dorothe=Dorothe.jpg
