@@ -56,8 +56,14 @@ public class BuildWallPublisher extends Notifier {
       Result result = build.getResult();
       ChangeLogSet<? extends Entry> changeSet = build.getChangeSet();
       StringBuilder builder = new StringBuilder();
+      boolean first = true;
       for (Entry entry : changeSet) {
-         builder.append(entry.getAuthor() + " ,");
+         if (first) {
+            first = false;
+         } else {
+            builder.append(" ,");
+         }
+         builder.append(entry.getAuthor());
       }
       String authors = builder.toString();
       Project project = (Project) build.getProject();
