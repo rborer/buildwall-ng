@@ -218,7 +218,7 @@ public class WallFrame extends JFrame {
       float newHeight = image.getHeight() * scaleFactor;
       float newWidth = image.getWidth() * scaleFactor;
       int sx = (int) (brick.width - newWidth) / 2 + brick.x;
-      int sy = brick.y + size + BOTTOMMARGIN + (brick.height - (brick.y + size + BOTTOMMARGIN) - (int) newHeight) / 2;
+      int sy = brick.y + size + BOTTOMMARGIN + (brick.height - (size + BOTTOMMARGIN) - (int) newHeight) / 2;
       g.drawImage(image, sx, sy, Math.round(newWidth), Math.round(newHeight), null);
       g.setColor(Color.BLACK);
       g.drawRect(sx, sy, Math.round(newWidth), Math.round(newHeight));

@@ -16,7 +16,7 @@ public class WallDemo {
       Wall wall = new Wall(faceUrl, new HorizontalUsherette());
       wall.publish(new BuildEvent("Project A", BuildStatus.FAILED, "trunk", Collections.singletonList("Arthur")));
       wall.publish(new BuildEvent("Project B", BuildStatus.BUILDING, "trunk", Collections.singletonList("Barnabe")));
-      //      wall.publish(new BuildEvent("Project C", BuildStatus.SUCCESS, "trunk", Collections.singletonList("Charles")));
+      wall.publish(new BuildEvent("Project C", BuildStatus.SUCCESS, "trunk", Collections.singletonList("Charles")));
       wall.publish(new BuildEvent("Project D", BuildStatus.SUCCESS, null, Collections.singletonList("Dorothe")));
       wall.startHttpServer();
    }
