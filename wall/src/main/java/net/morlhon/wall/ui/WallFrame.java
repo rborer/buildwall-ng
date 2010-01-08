@@ -165,17 +165,24 @@ public class WallFrame extends JFrame {
       if (brick.getName() == null) {
          return 0;
       }
-      g.setFont(g.getFont().deriveFont(Font.BOLD, 52f));
-      Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(brick.getName(), null);
-      int sx = (int) ((brick.width - stringBounds.getWidth()) / 2);
-      double textHeight = stringBounds.getHeight();
-      int sy = (int) Math.round(textHeight) + TOPMARGIN;
+      Rectangle2D stringBounds = null;
+      double textWidth = 0;
+      float startingFontSize = 52f;
+      do {
+         g.setFont(g.getFont().deriveFont(Font.BOLD, startingFontSize));
+         startingFontSize -= 2;
+         stringBounds = g.getFontMetrics().getStringBounds(brick.getName(), null);
+         textWidth = stringBounds.getWidth();
+      } while (textWidth > brick.width || startingFontSize >= 40f);
+      double textHeight = stringBounds.getHeight() + stringBounds.getMaxY();
+      int sx = (int) ((brick.width - textWidth) / 2);
+      int sy = (int) (Math.ceil(textHeight) + TOPMARGIN);
       g.setColor(textColor(brick.getColor()));
       Shape savedClip = g.getClip();
       g.setClip(brick.x, brick.y, brick.width, brick.height);
       g.drawString(brick.getName(), brick.x + sx, brick.y + sy);
       g.setClip(savedClip);
-      return (int) Math.round(textHeight);
+      return (int) Math.round(textHeight + TOPMARGIN);
    }
 
    private int drawBrickComment(Graphics g, Brick brick, int size) {
@@ -186,7 +193,7 @@ public class WallFrame extends JFrame {
       Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(brick.getComment(), null);
       int sx = (int) ((brick.width - stringBounds.getWidth()) / 2);
       double textHeight = stringBounds.getHeight();
-      int sy = (int) (size + textHeight + TOPMARGIN);
+      int sy = (int) (size + textHeight);
       g.setColor(textColor(brick.getColor()));
       Shape savedClip = g.getClip();
       g.setClip(brick.x, brick.y, brick.width, brick.height);
@@ -200,14 +207,21 @@ public class WallFrame extends JFrame {
       if (image == null) {
          return false;
       }
-      float maxHeight = brick.height - size - 2 * BOTTOMMARGIN;//(float) brick.height / 2;
-      float scaleFactory = (float) maxHeight / (float) image.getHeight();
-      float newWidth = (float) image.getWidth() * scaleFactory;
+      float maxHeight = brick.height - size - 2 * BOTTOMMARGIN;
+      float maxWidth = brick.width - 2 * BOTTOMMARGIN;
+      float scaleFactorHeight = maxHeight / image.getHeight();
+      float scaleFactorWidth = maxWidth / image.getWidth();
+      float scaleFactor = Math.min(scaleFactorHeight, scaleFactorWidth);
+      if (scaleFactor < 0) {
+         scaleFactor = 0;
+      }
+      float newHeight = image.getHeight() * scaleFactor;
+      float newWidth = image.getWidth() * scaleFactor;
       int sx = (int) (brick.width - newWidth) / 2 + brick.x;
-      int sy = brick.y + size + BOTTOMMARGIN;//(int) (brick.height / 2) + brick.y - BOTTOMMARGIN;
-      g.drawImage(image, sx, sy, Math.round(newWidth), Math.round(maxHeight), null);
+      int sy = brick.y + size + BOTTOMMARGIN + (brick.height - (brick.y + size + BOTTOMMARGIN) - (int) newHeight) / 2;
+      g.drawImage(image, sx, sy, Math.round(newWidth), Math.round(newHeight), null);
       g.setColor(Color.BLACK);
-      g.drawRect(sx, sy, Math.round(newWidth), Math.round(maxHeight));
+      g.drawRect(sx, sy, Math.round(newWidth), Math.round(newHeight));
       return true;
    }
 
