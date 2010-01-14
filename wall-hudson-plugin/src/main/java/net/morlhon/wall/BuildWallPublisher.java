@@ -37,13 +37,7 @@ public class BuildWallPublisher extends Notifier {
    @Override
    public boolean prebuild(AbstractBuild<?, ?> build, BuildListener listener) {
       Result result = build.getResult();
-      ChangeLogSet<? extends Entry> changeSet = build.getChangeSet();
-      StringBuilder builder = new StringBuilder();
-      for (Entry entry : changeSet) {
-         builder.append(entry.getAuthor() + " ,");
-         log.info(entry.getAuthor().toString());
-      }
-      String authors = builder.toString();
+      String authors = buildAuthorString(build);
       Project project = (Project) build.getProject();
       String displayName = project.getFullDisplayName();
       log.finest("Wall Notifier " + result);
@@ -54,18 +48,7 @@ public class BuildWallPublisher extends Notifier {
    @Override
    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
       Result result = build.getResult();
-      ChangeLogSet<? extends Entry> changeSet = build.getChangeSet();
-      StringBuilder builder = new StringBuilder();
-      boolean first = true;
-      for (Entry entry : changeSet) {
-         if (first) {
-            first = false;
-         } else {
-            builder.append(" ,");
-         }
-         builder.append(entry.getAuthor());
-      }
-      String authors = builder.toString();
+      String authors = buildAuthorString(build);
       Project project = (Project) build.getProject();
       String displayName = project.getFullDisplayName();
       log.info(displayName);
@@ -79,6 +62,22 @@ public class BuildWallPublisher extends Notifier {
          log.warning("Wall Build: unhandled build result " + result);
       }
       return true;
+   }
+
+   private String buildAuthorString(AbstractBuild<?, ?> build) {
+      ChangeLogSet<? extends Entry> changeSet = build.getChangeSet();
+      StringBuilder builder = new StringBuilder();
+      boolean first = true;
+      for (Entry entry : changeSet) {
+         if (first) {
+            first = false;
+         } else {
+            builder.append(" ,");
+         }
+         builder.append(entry.getAuthor());
+      }
+      String authors = builder.toString();
+      return authors;
    }
 
    public void doNotification(String serverKey, String project, String category, String status, String detail) {
