@@ -4,7 +4,6 @@ import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
-import hudson.model.Project;
 import hudson.model.Result;
 import hudson.scm.ChangeLogSet;
 import hudson.scm.ChangeLogSet.Entry;
@@ -38,8 +37,7 @@ public class BuildWallPublisher extends Notifier {
    public boolean prebuild(AbstractBuild<?, ?> build, BuildListener listener) {
       Result result = build.getResult();
       String authors = buildAuthorString(build);
-      Project project = (Project) build.getProject();
-      String displayName = project.getFullDisplayName();
+      String displayName = build.getFullDisplayName();
       log.finest("Wall Notifier " + result);
       doNotification(DESCRIPTOR.getServerURLKey(), displayName, null, "Building", authors);
       return true;
@@ -49,8 +47,7 @@ public class BuildWallPublisher extends Notifier {
    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
       Result result = build.getResult();
       String authors = buildAuthorString(build);
-      Project project = (Project) build.getProject();
-      String displayName = project.getFullDisplayName();
+      String displayName = build.getFullDisplayName();
       log.info(displayName);
       if (result == Result.FAILURE) {
          log.finest("Wall Notifier " + displayName + " is a failure " + authors);
