@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class BuildWallPublisher extends Notifier {
@@ -37,7 +38,7 @@ public class BuildWallPublisher extends Notifier {
    public boolean prebuild(AbstractBuild<?, ?> build, BuildListener listener) {
       Result result = build.getResult();
       String authors = buildAuthorString(build);
-      String displayName = build.getFullDisplayName();
+      String displayName = getProjectName(build);
       log.finest("Wall Notifier " + result);
       doNotification(DESCRIPTOR.getServerURLKey(), displayName, null, "Building", authors);
       return true;
@@ -47,7 +48,7 @@ public class BuildWallPublisher extends Notifier {
    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
       Result result = build.getResult();
       String authors = buildAuthorString(build);
-      String displayName = build.getFullDisplayName();
+      String displayName = getProjectName(build);
       log.info(displayName);
       if (result == Result.FAILURE) {
          log.finest("Wall Notifier " + displayName + " is a failure " + authors);
@@ -112,6 +113,19 @@ public class BuildWallPublisher extends Notifier {
          log.log(Level.SEVERE, e.getMessage());
          return null;
       }
+   }
+
+   // Hudson API make it difficult to get the project name...
+   public String getProjectName(AbstractBuild<?, ?> build) {
+      String fullDisplayName = build.getFullDisplayName();
+      if (StringUtils.isEmpty(fullDisplayName)) {
+         return "";
+      }
+      int index = fullDisplayName.indexOf('#');
+      if (index == -1) {
+         return fullDisplayName;
+      }
+      return fullDisplayName.substring(0, index).trim();
    }
 
 }
