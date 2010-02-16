@@ -43,6 +43,9 @@ public class FaceMapper {
    }
 
    private URL buildURL() {
+      if (baseURL == null) {
+         return null;
+      }
       try {
          return new URL(baseURL.toString() + "/faces.txt");
       } catch (MalformedURLException mue) {

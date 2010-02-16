@@ -28,21 +28,31 @@ import net.morlhon.wall.ui.ushering.Usherette;
 public class WallFrame extends JFrame {
    private static final String NO_DATA_YET = "No data yet...";
    private static final String FRAME_TITLE = "Wall";
-   private static final String DEBUG = "DEBUG";
+   private static final String WINDOWED = "WINDOWED";
    private static final Dimension DEFAULT_SIZE = new Dimension(640, 480);
    private static final int TOPMARGIN = 5;
    private static final int BOTTOMMARGIN = 5;
    private List<Brick> brickList = new ArrayList<Brick>();
    private final Usherette usherette;
-   private final ImageCache cache;
+   private ImageCache cache;
    private BufferedImage buffer;
    private WallHttpServer server;
+   private boolean displayImage = true;
+   private final URL facesURL;
 
    public WallFrame(URL facesURL, Usherette usherette) {
       super(FRAME_TITLE);
-      this.cache = new ImageCache(facesURL);
+      this.facesURL = facesURL;
+      displayImage = (facesURL != null);
       this.usherette = usherette;
-      setupFrame(System.getProperty(DEBUG) == null);
+      setupFrame(System.getProperty(WINDOWED) == null);
+   }
+
+   private void initImageCache() {
+      if (displayImage) {
+         this.cache = new ImageCache(facesURL);
+         this.cache.init();
+      }
    }
 
    public void setWallServer(WallHttpServer server) {
@@ -57,7 +67,7 @@ public class WallFrame extends JFrame {
 
    private void setupFrame(boolean fullScreen) {
       setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-      cache.init();
+      initImageCache();
       if (fullScreen) {
          this.setUndecorated(true);
          GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(this);
@@ -203,6 +213,9 @@ public class WallFrame extends JFrame {
    }
 
    private boolean drawBrickAuthorsAsImage(Graphics g, Brick brick, int size) {
+      if (!displayImage) {
+         return false;
+      }
       BufferedImage image = cache.getImage(brick.getFooter());
       if (image == null) {
          return false;
