@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.morlhon.wall.net.controller.HomePageController;
 import net.morlhon.wall.net.controller.PublishController;
 import net.morlhon.wall.net.controller.ReloadController;
 import net.morlhon.wall.net.controller.ResetController;
@@ -43,8 +44,7 @@ public class WallServlet extends HttpServlet {
          new ReloadController(wallServer).process(request, response);
          return;
       }
-      // default, should be changed once plugin handle publish
-      new PublishController(wallServer).process(request, response);
+      new HomePageController(wallServer).process(request, response);
    }
 
    @Override
