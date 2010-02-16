@@ -21,9 +21,7 @@ public class BuildRadiator {
    }
 
    public BuildRadiator(String[] args) throws MalformedURLException {
-      if (args.length == 0) {
-         url = new URL("file://./faces");
-      } else {
+      if (args.length > 0) {
          for (int i = 0; i < args.length; i++) {
             try {
                port = Integer.parseInt(args[i]);

@@ -12,7 +12,7 @@ public class WallDemo {
 
    public static void main(String[] args) throws Exception {
       URL faceUrl = FullWallDemo.class.getClassLoader().getResource("faces");
-      System.setProperty("DEBUG", "true");
+      System.setProperty("WINDOWED", "true");
       Wall wall = new Wall(faceUrl, new HorizontalUsherette());
       wall.publish(new BuildEvent("Project A", BuildStatus.FAILED, "trunk", Collections.singletonList("Arthur")));
       wall.publish(new BuildEvent("Project B", BuildStatus.BUILDING, "trunk", Collections.singletonList("Barnabe")));

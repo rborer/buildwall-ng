@@ -30,7 +30,7 @@ public class BuildRadiatorTest {
    public void testMain3() throws MalformedURLException, InterruptedException, InvocationTargetException {
       String[] args = new String[0];
       RadiatorMock mock = new RadiatorMock(args);
-      assertNotNull(mock.url);
+      assertNull(mock.url);
       assertEquals(8080, mock.port);
    }
 
