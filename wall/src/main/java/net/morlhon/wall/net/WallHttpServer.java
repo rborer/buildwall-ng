@@ -11,19 +11,16 @@ import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
 public class WallHttpServer {
-   private static final int DEFAULT_PORT = 8080;
    private Server server;
    private BuildEventListener listener;
+   private int port;
 
-   public WallHttpServer(BuildEventListener listener) {
+   public WallHttpServer(int port, BuildEventListener listener) {
       this.listener = listener;
+      this.port = port;
    }
 
    public void start() {
-      start(DEFAULT_PORT);
-   }
-
-   public void start(final int port) {
       server = new Server(port);
       Context context = new Context(server, "/", Context.SESSIONS);
       context.addServlet(new ServletHolder(new WallServlet(this)), "/*");
@@ -66,6 +63,10 @@ public class WallHttpServer {
       if (listener != null) {
          listener.reload();
       }
+   }
+
+   public int getPort() {
+      return port;
    }
 
 }

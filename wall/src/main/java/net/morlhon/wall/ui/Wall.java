@@ -19,13 +19,19 @@ public class Wall extends WallFrame implements BuildEventListener {
    private static final Color buildingColor = Color.YELLOW;
    private Map<String, BuildEvent> eventMap = new HashMap<String, BuildEvent>();
    private static final int MAX_EVENT = 9;
+   private static final int DEFAULT_PORT = 8080;
 
    public Wall(URL faceUrl, Usherette usherette) {
       super(faceUrl, usherette);
    }
 
    public void startHttpServer() {
-      WallHttpServer server = new WallHttpServer(this);
+      WallHttpServer server = new WallHttpServer(DEFAULT_PORT,this);
+      setWallServer(server);
+   }
+
+   public void startHttpServer(int port) {
+      WallHttpServer server = new WallHttpServer(port, this);
       setWallServer(server);
    }
 
