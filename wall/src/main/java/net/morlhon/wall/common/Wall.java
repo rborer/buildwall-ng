@@ -1,4 +1,4 @@
-package net.morlhon.wall.ui;
+package net.morlhon.wall.common;
 
 import java.awt.Color;
 import java.net.URL;
@@ -8,31 +8,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.morlhon.wall.common.BuildEvent;
-import net.morlhon.wall.common.BuildEventListener;
 import net.morlhon.wall.net.WallHttpServer;
+import net.morlhon.wall.ui.Brick;
+import net.morlhon.wall.ui.WallFrame;
 import net.morlhon.wall.ui.ushering.Usherette;
 
-public class Wall extends WallFrame implements BuildEventListener {
+public class Wall implements BuildEventListener, GuiEventListener {
    private static final Color successColor = new Color(0, 0x80, 0);
    private static final Color failedColor = Color.RED;
    private static final Color buildingColor = Color.YELLOW;
    private Map<String, BuildEvent> eventMap = new HashMap<String, BuildEvent>();
    private static final int MAX_EVENT = 9;
    private static final int DEFAULT_PORT = 8080;
+   private WallFrame frame;
+   private WallHttpServer server;
 
-   public Wall(URL faceUrl, Usherette usherette) {
-      super(faceUrl, usherette);
+   public void startGUI(URL faceUrl, Usherette usherette) {
+      frame = new WallFrame(this, faceUrl, usherette);
    }
 
    public void startHttpServer() {
-      WallHttpServer server = new WallHttpServer(DEFAULT_PORT,this);
-      setWallServer(server);
+      server = new WallHttpServer(DEFAULT_PORT,this);
+      server.start();
    }
 
    public void startHttpServer(int port) {
-      WallHttpServer server = new WallHttpServer(port, this);
-      setWallServer(server);
+      server = new WallHttpServer(port, this);
+      server.start();
    }
 
    @Override
@@ -40,7 +42,7 @@ public class Wall extends WallFrame implements BuildEventListener {
       synchronized (eventMap) {
          eventMap.put(event.getName(), event);
       }
-      setBrickList(createBrickListFromEventMap());
+      frame.setBrickList(createBrickListFromEventMap());
    }
 
    @Override
@@ -48,9 +50,10 @@ public class Wall extends WallFrame implements BuildEventListener {
       synchronized (eventMap) {
          eventMap.clear();
       }
-      setBrickList(createBrickListFromEventMap());
+      frame.setBrickList(createBrickListFromEventMap());
    }
 
+   // Transform a list of BuildEvent into a Brick List.
    private List<Brick> createBrickListFromEventMap() {
       Map<String, BuildEvent> eventMapCopy = null;
       synchronized (eventMap) {
@@ -97,7 +100,18 @@ public class Wall extends WallFrame implements BuildEventListener {
 
    @Override
    public void reload() {
-      setBrickList(createBrickListFromEventMap());
-      super.reload();
+      frame.setBrickList(createBrickListFromEventMap());
+      frame.reload();
+   }
+
+   @Override
+   public void stop() {
+      server.shutdown();
+      frame.close();
+   }
+
+   @Override
+   public void askForShutdown() {
+      stop();
    }
 }

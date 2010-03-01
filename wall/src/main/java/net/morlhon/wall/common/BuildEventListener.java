@@ -14,4 +14,6 @@ public interface BuildEventListener {
    public void reload();
 
    public List<BuildEvent> status();
+
+   public void stop();
 }

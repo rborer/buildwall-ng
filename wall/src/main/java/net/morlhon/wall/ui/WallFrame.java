@@ -22,9 +22,14 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import net.morlhon.wall.net.WallHttpServer;
+import net.morlhon.wall.common.GuiEventListener;
 import net.morlhon.wall.ui.ushering.Usherette;
 
+/**
+ * WallFrame is a JFrame able to draw wall, most of the drawning specific to the buildWall is done here.
+ *
+ * @author Jean-Laurent de Morlhon
+ */
 public class WallFrame extends JFrame {
    private static final String NO_DATA_YET = "No data yet...";
    private static final String FRAME_TITLE = "Wall";
@@ -36,12 +41,14 @@ public class WallFrame extends JFrame {
    private final Usherette usherette;
    private ImageCache cache;
    private BufferedImage buffer;
-   private WallHttpServer server;
    private boolean displayImage = true;
    private final URL facesURL;
+   private final GuiEventListener guiEvent;
+   private boolean isClosing = false;
 
-   public WallFrame(URL facesURL, Usherette usherette) {
+   public WallFrame(GuiEventListener guiEvent, URL facesURL, Usherette usherette) {
       super(FRAME_TITLE);
+      this.guiEvent = guiEvent;
       this.facesURL = facesURL;
       displayImage = (facesURL != null);
       this.usherette = usherette;
@@ -55,14 +62,12 @@ public class WallFrame extends JFrame {
       }
    }
 
-   public void setWallServer(WallHttpServer server) {
-      this.server = server;
-      server.start();
-   }
-
    public void close() {
-      setVisible(false);
-      dispose();
+      if (!isClosing) {
+         isClosing = true;
+         setVisible(false);
+         dispose();
+      }
    }
 
    private void setupFrame(boolean fullScreen) {
@@ -80,9 +85,7 @@ public class WallFrame extends JFrame {
 
          @Override
          public void windowClosed(WindowEvent e) {
-            if (server != null) {
-               server.stop();
-            }
+            guiEvent.askForShutdown();
          }
 
       });
@@ -98,7 +101,9 @@ public class WallFrame extends JFrame {
       addKeyListener(new KeyAdapter() {
          @Override
          public void keyReleased(KeyEvent e) {
-            close();
+            if (e.getKeyCode() == KeyEvent.VK_Q) {
+               guiEvent.askForShutdown();
+            }
          }
       });
 
@@ -106,7 +111,7 @@ public class WallFrame extends JFrame {
          @Override
          public void mouseClicked(MouseEvent me) {
             if (me.getClickCount() == 2) {
-               close();
+               guiEvent.askForShutdown();
             }
          }
       });

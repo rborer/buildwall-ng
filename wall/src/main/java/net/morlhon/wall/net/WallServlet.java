@@ -12,7 +12,6 @@ import net.morlhon.wall.net.controller.PublishController;
 import net.morlhon.wall.net.controller.ReloadController;
 import net.morlhon.wall.net.controller.ResetController;
 import net.morlhon.wall.net.controller.StatusController;
-import net.morlhon.wall.net.controller.StopController;
 
 public class WallServlet extends HttpServlet {
    private final WallHttpServer wallServer;
@@ -30,10 +29,6 @@ public class WallServlet extends HttpServlet {
       }
       if (contextPath.startsWith("/status")) {
          new StatusController(wallServer).process(request, response);
-         return;
-      }
-      if (contextPath.startsWith("/stop")) {
-         new StopController(wallServer).process(request, response);
          return;
       }
       if (contextPath.startsWith("/reset")) {

@@ -6,6 +6,8 @@ import net.morlhon.wall.ui.Brick;
 
 public class HorizontalUsherette implements Usherette {
 
+   private static final double COLUMN = 3.0;
+
    @Override
    public void usher(List<Brick> brickList, int screenWidth, int screenHeight) {
       if (brickList == null) {
@@ -14,7 +16,7 @@ public class HorizontalUsherette implements Usherette {
       if (brickList.size() == 0) {
          return;
       }
-      int row = (int) Math.ceil(brickList.size() / 3.0);
+      int row = (int) Math.ceil(brickList.size() / COLUMN);
       int col = (int) Math.ceil(brickList.size() / (double) row);
       int width = screenWidth / col;
       int height = screenHeight / row;

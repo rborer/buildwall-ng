@@ -3,7 +3,7 @@ package net.morlhon.wall;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import net.morlhon.wall.ui.Wall;
+import net.morlhon.wall.common.Wall;
 import net.morlhon.wall.ui.ushering.HorizontalUsherette;
 
 /**
@@ -33,7 +33,8 @@ public class BuildRadiator {
    }
 
    public void startup() {
-      Wall wall = new Wall(url, new HorizontalUsherette());
+      Wall wall = new Wall();
+      wall.startGUI(url, new HorizontalUsherette());
       wall.startHttpServer(port);
    }
 

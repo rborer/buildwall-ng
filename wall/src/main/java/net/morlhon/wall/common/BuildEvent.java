@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Represents a build event as issued by the build system.<br>
  * This object is meant to be a read-only representation of a build event.
- * 
+ *
  * @author Jean-Laurent de Morlhon
  */
 public class BuildEvent implements Comparable<BuildEvent> {

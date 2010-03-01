@@ -32,11 +32,18 @@ public class WallHttpServer {
       }
    }
 
-   public void stop() {
+   public void shutdown() {
       try {
          server.stop();
-      } catch (Exception exception) {
-         throw new RuntimeException(exception);
+         server.join();
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+
+   public void stop() {
+      if (listener != null) {
+         listener.stop();
       }
    }
 
