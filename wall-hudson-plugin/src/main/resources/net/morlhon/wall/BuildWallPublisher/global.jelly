@@ -4,7 +4,7 @@
   
       <f:entry 
          title="Wall Server URL" 
-         help="${rootURL}/plugin/wall-hudson-plugin/help-serverURLKey.html">
+         help="/plugin/wall-hudson-plugin/help-serverURLKey.html">
          <input class="setting-input" name="serverURLKey" type="text"
             value="${descriptor.serverURLKey}" />
       </f:entry>
