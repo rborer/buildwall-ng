@@ -1,7 +1,7 @@
 package net.morlhon.wall.common;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Represents a build event as issued by the build system.<br>
@@ -14,7 +14,7 @@ public class BuildEvent implements Comparable<BuildEvent> {
    private String name;
    private BuildStatus status;
    private String category;
-   private List<String> authors;
+   private Set<String> authors;
 
    public BuildEvent(String project, BuildStatus status) {
       init(project, status, null, null);
@@ -24,11 +24,11 @@ public class BuildEvent implements Comparable<BuildEvent> {
       init(project, status, category, null);
    }
 
-   public BuildEvent(String project, BuildStatus status, String category, List<String> authors) {
+   public BuildEvent(String project, BuildStatus status, String category, Set<String> authors) {
       init(project, status, category, authors);
    }
 
-   private void init(String project, BuildStatus status, String category, List<String> authors) {
+   private void init(String project, BuildStatus status, String category, Set<String> authors) {
       this.name = project;
       this.status = status;
       this.date = new Date();
@@ -68,11 +68,11 @@ public class BuildEvent implements Comparable<BuildEvent> {
    }
 
    /**
-    * An optional list of authors related having participated to this build event.
-    *
-    * @return a List of authors related to this build event, or null if none have been set.
+    * An optional set of authors related having participated to this build event.
+    * 
+    * @return a Set of authors related to this build event, or null if none have been set.
     */
-   public List<String> getAuthors() {
+   public Set<String> getAuthors() {
       return authors;
    }
 

@@ -15,10 +15,10 @@ public class WallDemo {
       System.setProperty("WINDOWED", "true");
       Wall wall = new Wall();
       wall.startGUI(faceUrl, new HorizontalUsherette());
-      wall.publish(new BuildEvent("Project A", BuildStatus.FAILED, "trunk", Collections.singletonList("Arthur")));
-      wall.publish(new BuildEvent("Project B", BuildStatus.BUILDING, "trunk", Collections.singletonList("Barnabe")));
-      wall.publish(new BuildEvent("Project C", BuildStatus.SUCCESS, "trunk", Collections.singletonList("Charles")));
-      wall.publish(new BuildEvent("Project D", BuildStatus.SUCCESS, null, Collections.singletonList("Dorothe")));
+      wall.publish(new BuildEvent("Project A", BuildStatus.FAILED, "trunk", Collections.singleton("Arthur")));
+      wall.publish(new BuildEvent("Project B", BuildStatus.BUILDING, "trunk", Collections.singleton("Barnabe")));
+      wall.publish(new BuildEvent("Project C", BuildStatus.SUCCESS, "trunk", Collections.singleton("Charles")));
+      wall.publish(new BuildEvent("Project D", BuildStatus.SUCCESS, null, Collections.singleton("Dorothe")));
       wall.startHttpServer();
    }
 

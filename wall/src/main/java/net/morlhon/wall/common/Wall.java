@@ -3,6 +3,7 @@ package net.morlhon.wall.common;
 import java.awt.Color;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ public class Wall implements BuildEventListener, GuiEventListener {
    private static final Color successColor = new Color(0, 0x80, 0);
    private static final Color failedColor = Color.RED;
    private static final Color buildingColor = Color.YELLOW;
-   private Map<String, BuildEvent> eventMap = new HashMap<String, BuildEvent>();
+   private final Map<String, BuildEvent> eventMap = new HashMap<String, BuildEvent>();
    private static final int MAX_EVENT = 9;
    private static final int DEFAULT_PORT = 8080;
    private WallFrame frame;
@@ -74,13 +75,13 @@ public class Wall implements BuildEventListener, GuiEventListener {
             color = buildingColor;
             break;
          }
-         Brick brick = new Brick(currentEvent.getName(), color, currentEvent.getCategory(), list2String(currentEvent.getAuthors()));
+         Brick brick = new Brick(currentEvent.getName(), color, currentEvent.getCategory(), collection2String(currentEvent.getAuthors()));
          newBrickList.add(brick);
       }
       return newBrickList;
    }
 
-   private String list2String(List<String> authors) {
+   private String collection2String(Collection<String> authors) {
       if (authors == null) {
          return "";
       }

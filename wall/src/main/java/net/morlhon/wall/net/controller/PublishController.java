@@ -42,7 +42,7 @@ public class PublishController extends AbstractController implements Controller 
 
    private void publishToServer(String project, String status, String category, String authors) {
       BuildStatus buildStatus = BuildStatus.valueOf(status.toUpperCase());
-      wallServer.registerEvent(new BuildEvent(project, buildStatus, category, Collections.singletonList(authors)));
+      wallServer.registerEvent(new BuildEvent(project, buildStatus, category, Collections.singleton(authors)));
    }
 
 }
