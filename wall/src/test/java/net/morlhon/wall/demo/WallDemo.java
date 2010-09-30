@@ -19,6 +19,7 @@ public class WallDemo {
       wall.publish(new BuildEvent("Project B", BuildStatus.BUILDING, "trunk", Collections.singleton("Barnabe")));
       wall.publish(new BuildEvent("Project C", BuildStatus.SUCCESS, "trunk", Collections.singleton("Charles")));
       wall.publish(new BuildEvent("Project D", BuildStatus.SUCCESS, null, Collections.singleton("Dorothe")));
+      wall.publish(new BuildEvent("Project Gravatar", BuildStatus.SUCCESS, null, Collections.singleton("jblemee")));
       wall.startHttpServer();
    }
 

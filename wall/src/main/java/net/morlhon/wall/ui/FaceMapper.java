@@ -8,7 +8,11 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.morlhon.wall.common.MD5Util;
+
 public class FaceMapper {
+   private static final String URL_GRAVATAR = "http://www.gravatar.com/avatar/";
+   private static final String GRAVATAR_SIZE = "?s=200";
    private final URL faceFileURL;
    private final URL baseURL;
    private final Map<String, URL> map;
@@ -61,7 +65,12 @@ public class FaceMapper {
          String name = buffer.substring(0, index).trim().toLowerCase();
          String endURl = buffer.substring(index + 1).trim();
          try {
-            return new StringURL(name, new URL(baseURL.toString() + "/" + endURl));
+            if (endURl.indexOf("@") == -1) {
+               return new StringURL(name, new URL(baseURL.toString() + "/" + endURl));
+            } else {
+               // Gravatar
+               return new StringURL(name, new URL(URL_GRAVATAR + MD5Util.md5Hex(endURl) + GRAVATAR_SIZE));
+            }
          } catch (MalformedURLException mue) {
             return null;
          }
@@ -71,8 +80,8 @@ public class FaceMapper {
 }
 
 class StringURL {
-   private String name;
-   private URL url;
+   private final String name;
+   private final URL url;
 
    public StringURL(String name, URL url) {
       this.name = name;

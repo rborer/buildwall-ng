@@ -2,3 +2,4 @@ arthur=arthur.jpg
 barnabe=Barnabe.jpg
 charles=Charles.jpg
 dorothe=Dorothe.jpg
+jblemee=jean-baptiste.lemee@vidal.fr
