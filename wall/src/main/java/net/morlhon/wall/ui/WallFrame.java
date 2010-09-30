@@ -247,16 +247,20 @@ public class WallFrame extends JFrame {
       if (brick.getFooter() == null) {
          return;
       }
+      String[] lineArray = brick.getFooter().split("\n");
       g.setFont(g.getFont().deriveFont(Font.BOLD, 24f));
-      Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(brick.getFooter(), null);
-      int sx = (int) ((brick.width - stringBounds.getWidth()) / 2);
-      double textHeight = stringBounds.getHeight();
-      int sy = (int) (((brick.height - textHeight) * 3) / 4 + textHeight);
-      g.setColor(textColor(brick.getColor()));
-      Shape savedClip = g.getClip();
-      g.setClip(brick.x, brick.y, brick.width, brick.height);
-      g.drawString(brick.getFooter(), brick.x + sx, brick.y + sy);
-      g.setClip(savedClip);
+      int arrayLength = lineArray.length;
+      for (int i =0; i< lineArray.length; i++) {
+         Rectangle2D stringBounds = g.getFontMetrics().getStringBounds(lineArray[i], null);
+         int sx = (int) ((brick.width - stringBounds.getWidth()) / 2);
+         double textHeight = stringBounds.getHeight();
+         int sy = (int) (((brick.height - textHeight) * 3) / 4 + ((textHeight / 2) * (arrayLength + 1 - (2 * i))));
+         g.setColor(textColor(brick.getColor()));
+         Shape savedClip = g.getClip();
+         g.setClip(brick.x, brick.y, brick.width, brick.height);
+         g.drawString(lineArray[i], brick.x + sx, brick.y + sy);
+         g.setClip(savedClip);
+      }
    }
 
    private Color textColor(Color color) {

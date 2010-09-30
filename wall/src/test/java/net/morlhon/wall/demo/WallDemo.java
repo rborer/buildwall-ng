@@ -1,7 +1,9 @@
 package net.morlhon.wall.demo;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 
 import net.morlhon.wall.common.BuildEvent;
 import net.morlhon.wall.common.BuildStatus;
@@ -20,6 +22,9 @@ public class WallDemo {
       wall.publish(new BuildEvent("Project C", BuildStatus.SUCCESS, "trunk", Collections.singleton("Charles")));
       wall.publish(new BuildEvent("Project D", BuildStatus.SUCCESS, null, Collections.singleton("Dorothe")));
       wall.publish(new BuildEvent("Project Gravatar", BuildStatus.SUCCESS, null, Collections.singleton("jblemee")));
+      wall.publish(new BuildEvent("Project Multi names", BuildStatus.SUCCESS, null, new HashSet<String>(Arrays.asList(new String[] {"jblemee", "Dorothe",
+            "John", "Tony", "Karim"}))));
+      wall.publish(new BuildEvent("Project No Image", BuildStatus.SUCCESS, null, Collections.singleton("Romain")));
       wall.startHttpServer();
    }
 

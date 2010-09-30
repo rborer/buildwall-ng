@@ -1,7 +1,7 @@
 package net.morlhon.wall.net.controller;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -47,7 +47,7 @@ public class PublishController extends AbstractController implements Controller 
    }
 
    private Set<String> stringToSet(String authors) {
-      Set<String>  set = new HashSet<String>();
+      Set<String> set = new LinkedHashSet<String>();
       for(String author : authors.split(",")){
          set.add(author.trim());
       }

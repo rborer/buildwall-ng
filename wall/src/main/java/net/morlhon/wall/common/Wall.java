@@ -88,6 +88,9 @@ public class Wall implements BuildEventListener, GuiEventListener {
       StringBuilder stringBuilder = new StringBuilder();
       for (String string : authors) {
          stringBuilder.append(string);
+         if (authors.size() > 1) {
+            stringBuilder.append("\n");
+         }
       }
       return stringBuilder.toString();
    }
