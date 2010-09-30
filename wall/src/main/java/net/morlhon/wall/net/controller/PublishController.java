@@ -1,7 +1,8 @@
 package net.morlhon.wall.net.controller;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +43,15 @@ public class PublishController extends AbstractController implements Controller 
 
    private void publishToServer(String project, String status, String category, String authors) {
       BuildStatus buildStatus = BuildStatus.valueOf(status.toUpperCase());
-      wallServer.registerEvent(new BuildEvent(project, buildStatus, category, Collections.singleton(authors)));
+      wallServer.registerEvent(new BuildEvent(project, buildStatus, category, stringToSet(authors)));
+   }
+
+   private Set<String> stringToSet(String authors) {
+      Set<String>  set = new HashSet<String>();
+      for(String author : authors.split(",")){
+         set.add(author.trim());
+      }
+      return set;
    }
 
 }
