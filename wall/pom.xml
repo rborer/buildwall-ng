@@ -5,18 +5,50 @@
 	<artifactId>wall</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<name>Build Information Radiator</name>
+	<developers>
+     <developer>
+       <id>jlm</id>
+       <name>Jean-Laurent de Morlhon</name>
+       <email>jeanlaurnet@codehaus.org</email>
+       <url>http://morlhon.net/blog</url>
+       <roles>
+         <role>developer</role>
+       </roles>
+       <timezone>+1</timezone>
+     </developer>
+     <developer>
+       <id>jbl</id>
+       <name>Jean-Baptiste Lemee</name>
+       <email>jblemee@gmail.com</email>
+       <roles>
+         <role>developer</role>
+       </roles>
+       <timezone>+1</timezone>
+     </developer>
+   </developers>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
+          <encoding>UTF-8</encoding>
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.3</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2-beta5</version>
 				<configuration>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
@@ -45,13 +77,13 @@
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
-         <version>4.7</version>
+         <version>4.8.1</version>
          <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.mockito</groupId>
          <artifactId>mockito-all</artifactId>
-         <version>1.8.1</version>
+         <version>1.8.5</version>
          <scope>test</scope>
       </dependency>
 	</dependencies>
