@@ -2,9 +2,9 @@ package net.morlhon.wall;
 
 import hudson.Extension;
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Result;
+import hudson.model.AbstractBuild;
 import hudson.scm.ChangeLogSet;
 import hudson.scm.ChangeLogSet.Entry;
 import hudson.tasks.BuildStepMonitor;
@@ -85,7 +85,7 @@ public class BuildWallPublisher extends Notifier {
          String statusEncoded = encode(status);
          String detailEncoded = encode(detail);
          StringBuilder stringBuilder = new StringBuilder();
-         stringBuilder.append(serverKey);
+         stringBuilder.append(StringUtils.chomp(serverKey, "/"));
          stringBuilder.append("/publish");
          stringBuilder.append("?project=" + projectEncoded);
          stringBuilder.append("&status=" + statusEncoded);
