@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CardPane
+	xmlns:wtkx="http://pivot.apache.org/wtkx"
+	xmlns="org.apache.pivot.wtk"
+	styles="{selectionChangeEffect:'CROSSFADE',selectionChangeDuration:500}">
+
+	<Border styles="{thickness:0, backgroundColor:'black', cornerRadii:10}">
+		<content>
+				<Label styles="{horizontalAlignment:'center', verticalAlignment:'center'}"/>
+		</content>
+	</Border>
+	<Border styles="{thickness:0, backgroundColor:'red', cornerRadii:10}">
+		<content>
+				<Label text="ko" styles="{horizontalAlignment:'center', verticalAlignment:'center'}"/>
+		</content>
+	</Border>
+</CardPane>

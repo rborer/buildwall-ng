@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window title="BuildWall NG" maximized="true"
+		xmlns:wtkx="http://pivot.apache.org/wtkx"
+		xmlns="org.apache.pivot.wtk"
+		styles="{backgroundColor:'black'}">
+
+	<wtkx:define>
+		<wtkx:include wtkx:id="eventBox" src="event_box.vtkx"/>
+	</wtkx:define>
+
+		<content>
+				<BoxPane wtkx:id="boxPane" orientation="vertical"
+					styles="{horizontalAlignment:'center', verticalAlignment:'center',
+						padding:6, spacing:8, fill:true}">
+
+						<Border styles="{thickness:0, backgroundColor:'black'}">
+								<content>
+									 <GridPane wtkx:id="gridPane" columnCount="3" styles="{horizontalSpacing:5, verticalSpacing:5,
+											showHorizontalGridLines:false, showVerticalGridLines:false}">
+
+									</GridPane>
+								</content>
+						</Border>
+
+						<Border styles="{thickness:2, backgroundColor:'black', cornerRadii:10}">
+								<content>
+									<CardPane wtkx:id="tickerCardPane"
+										styles="{selectionChangeEffect:'HORIZONTAL_FLIP'}">
+										<Label wtkx:id="ticker1"
+											styles="{font:{italic:true, size:32}, color:'#0075ff',
+											horizontalAlignment:'center', verticalAlignment:'center'}"
+											text="No data received yet..." />
+										<Label wtkx:id="ticker2"
+											styles="{font:{bold:true, size:32}, color:'red',
+											horizontalAlignment:'center', verticalAlignment:'center'}"
+											text="Please check your CI infrastructure!" />
+									</CardPane>
+								</content>
+						</Border>
+				</BoxPane>
+		</content>
+</Window>
