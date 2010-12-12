@@ -4,6 +4,9 @@
 	xmlns="org.apache.pivot.wtk"
 	styles="{selectionChangeEffect:'CROSSFADE',selectionChangeDuration:500}">
 
+	<wtkx:include wtkx:id="boxContent1" src="box_content.vtkx"/>
+	<wtkx:include wtkx:id="boxContent2" src="box_content.vtkx"/>
+
 	<Border styles="{thickness:0, backgroundColor:'black', cornerRadii:10}">
 		<content>
 				<Label styles="{horizontalAlignment:'center', verticalAlignment:'center'}"/>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Border
+	xmlns:wtkx="http://pivot.apache.org/wtkx"
+	xmlns="org.apache.pivot.wtk"
+	styles="{thickness:0, backgroundColor:'black', cornerRadii:10}">
+
+	<content>
+		<BoxPane orientation="vertical" styles="{padding:6,fill:true}">
+				<Label text="Project name"
+					styles="{horizontalAlignment:'center', verticalAlignment:'top', wrapText:true,
+						font:{bold:true, size:18}}"/>
+
+				<Label text="Project category"
+					styles="{horizontalAlignment:'center', verticalAlignment:'top',
+						font:{italic:true, size:14}}'}"/>
+
+				<Label text="Authors"
+					styles="{horizontalAlignment:'center', verticalAlignment:'top',
+						font:{italic:true, size:16}}'}"/>
+
+				<Label text="Build date" styles="{horizontalAlignment:'left', verticalAlignment:'top'}"/>
+		</BoxPane>
+	</content>
+</Border>

@@ -67,6 +67,7 @@ public class PivotWall implements Application {
 		}
 
 		gridPane.setMinimumPreferredHeight(height);
+		gridPane.setMaximumPreferredHeight(height);
 	}
 
 	private void startHttpServer(final int serverPort,

@@ -71,7 +71,7 @@
 		  <artifactId>pivot-wtk-terra</artifactId>
 		  <version>1.5.2</version>
 		</dependency>
-		
+
 		<dependency>
 		  <groupId>commons-lang</groupId>
 		  <artifactId>commons-lang</artifactId>
@@ -88,6 +88,11 @@
 			<artifactId>servlet-api-2.5</artifactId>
 			<version>6.1.4</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2.1</version>
 		</dependency>
 	</dependencies>
 </project>
